@@ -8,7 +8,17 @@ Open `index.html` in your browser.
 
 ## CSV export
 
-The same directory is available as **`data/services.csv`** (columns: title, category, summary, areas_of_law, tags, coverage, phone, email, hours, cta, website, affiliate, sponsored, priority). Use **Download CSV** in the header to save a copy. When you add or edit entries in `data/services.json`, regenerate the CSV (e.g. run `node scripts/json-to-csv.js` if you add that script) or update `data/services.csv` by hand so the two stay in sync.
+The same directory is available as **`data/services.csv`** (columns: title, category, summary, areas_of_law, tags, coverage, phone, email, hours, cta, website, affiliate, sponsored, priority).
+
+Regenerate locally with:
+
+```bash
+node scripts/json-to-csv.js
+```
+
+CSV sync is also automated in GitHub Actions via `.github/workflows/sync-services-csv.yml`.
+On pushes to `main` (or PRs) that touch `data/services.json` or `scripts/json-to-csv.js`,
+the workflow regenerates `data/services.csv`; on `main` pushes, it auto-commits updated CSV output.
 
 ## Edit listings
 
