@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Signpost — Legal Services Directory</title>
+    <meta
+      name="description"
+      content="A Craigslist-style directory of legal services and resources. Find the right help, fast."
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand__mark" aria-hidden="true">SP</div>
+        <div class="brand__text">
+          <div class="brand__name">Signpost</div>
+          <div class="brand__tagline">Legal services directory</div>
+        </div>
+      </div>
+
+      <div class="topbar__actions">
+        <a class="pill" href="data/services.csv" download="signpost-legal-services.csv">Download CSV</a>
+        <a class="pill" href="#how-it-works">How it works</a>
+        <a class="pill pill--primary" href="#partners">Become a partner</a>
+      </div>
+    </header>
+
+    <main class="layout">
+      <aside class="sidebar" aria-label="Browse categories">
+        <div class="sidebar__title">Categories</div>
+        <nav id="categoryList" class="categoryList" aria-label="Category list"></nav>
+
+        <div class="sidebar__box" id="partners">
+          <div class="sidebar__boxTitle">Partner placements</div>
+          <p class="sidebar__boxText">
+            Want your service featured at the top of relevant categories?
+          </p>
+          <a class="btn btn--solid" href="#" id="partnerCta">Get listed</a>
+          <p class="sidebar__fineprint">
+            We may earn a commission from partner links. Non-partner resources are included
+            for completeness.
+          </p>
+        </div>
+      </aside>
+
+      <section class="content" aria-label="Listings">
+        <div class="controls">
+          <div class="search">
+            <label class="srOnly" for="q">Search</label>
+            <input id="q" type="search" placeholder="Search services, tags, and categories…" />
+          </div>
+          <div class="filters">
+            <label class="check">
+              <input id="onlyPartners" type="checkbox" />
+              Show partner links only
+            </label>
+            <label class="check">
+              <input id="hideNonAffiliateBadges" type="checkbox" />
+              Hide “partner” badges
+            </label>
+          </div>
+        </div>
+
+        <div class="heading">
+          <h1 id="pageTitle">All legal services</h1>
+          <div class="heading__meta" id="resultMeta"></div>
+        </div>
+
+        <div class="grid">
+          <div class="panel">
+            <div class="panel__title">Sponsored</div>
+            <div class="panel__body" id="sponsored"></div>
+          </div>
+
+          <div class="panel panel--main">
+            <div class="panel__title">Listings</div>
+            <div class="panel__body" id="results"></div>
+          </div>
+        </div>
+
+        <section class="how" id="how-it-works">
+          <h2>How it works</h2>
+          <ol>
+            <li>Pick a category (or search).</li>
+            <li>Compare a few options (free, legal aid, clinics, specialist orgs).</li>
+            <li>Use partner links when they fit — it helps fund the directory.</li>
+          </ol>
+          <p class="how__note">
+            Source: curated from public signposting resources, including Advocate’s signposting page:
+            <a
+              href="https://weareadvocate.org.uk/apply-for-help/signposting.html"
+              target="_blank"
+              rel="noreferrer"
+              >weareadvocate.org.uk</a
+            >.
+          </p>
+        </section>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer__inner">
+        <div>
+          <strong>Disclosure:</strong> Some links are affiliate/partner links. We may earn a
+          commission if you use them, at no extra cost to you.
+        </div>
+        <div class="footer__links">
+          <a href="#" id="reportLink">Report a listing</a>
+          <span aria-hidden="true">·</span>
+          <a href="#" id="suggestLink">Suggest a service</a>
+        </div>
+      </div>
+    </footer>
+
+    <script type="module" src="./app/main.js"></script>
+  </body>
+</html>
+
