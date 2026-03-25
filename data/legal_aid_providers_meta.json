@@ -1,0 +1,46 @@
+{
+  "source_page": "https://www.gov.uk/government/publications/directory-of-legal-aid-providers",
+  "source_xlsx_url": "https://assets.publishing.service.gov.uk/media/69b178d0cdd628b29e349667/260226_Directory_of_provider_GOV.UK_v3.xlsx",
+  "pulled_at_utc": "2026-03-25T20:26:29+00:00",
+  "total_rows": 14392,
+  "total_sheets": 9,
+  "sheet_stats": [
+    {
+      "sheet": "About the data",
+      "rows": 91
+    },
+    {
+      "sheet": "Summary",
+      "rows": 3338
+    },
+    {
+      "sheet": "2024 Civil authorisations",
+      "rows": 3532
+    },
+    {
+      "sheet": "Modern Slavery",
+      "rows": 509
+    },
+    {
+      "sheet": "Housing Loss Prevention Advice",
+      "rows": 108
+    },
+    {
+      "sheet": "2024 Civil PT & O Presence",
+      "rows": 248
+    },
+    {
+      "sheet": "2024 Mediation Outreach",
+      "rows": 1263
+    },
+    {
+      "sheet": "2025 Crime Providers",
+      "rows": 1616
+    },
+    {
+      "sheet": "2025 Crime provider DSCC scheme",
+      "rows": 3687
+    }
+  ],
+  "output_csv": "data/legal_aid_providers_latest.csv"
+}

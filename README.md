@@ -20,6 +20,23 @@ CSV sync is also automated in GitHub Actions via `.github/workflows/sync-service
 On pushes to `main` (or PRs) that touch `data/services.json` or `scripts/json-to-csv.js`,
 the workflow regenerates `data/services.csv`; on `main` pushes, it auto-commits updated CSV output.
 
+## Monthly GOV.UK legal aid provider ingest
+
+This project now includes a monthly ingest pipeline for the Legal Aid Agency provider directory from GOV.UK:
+
+- Source page: `https://www.gov.uk/government/publications/directory-of-legal-aid-providers`
+- Script: `scripts/update-legal-aid-providers.py`
+- Workflow: `.github/workflows/monthly-legal-aid-ingest.yml`
+
+### Outputs
+
+- `data/legal_aid_providers_latest.csv` (normalized provider rows from all workbook sheets)
+- `data/legal_aid_providers_meta.json` (source URL, pull timestamp, sheet/row stats)
+
+### Schedule
+
+Runs automatically on the 2nd day of every month at 06:00 UTC, and can be run manually from the GitHub Actions tab (`workflow_dispatch`).
+
 ## Edit listings
 
 Update `data/services.json`.
