@@ -27,8 +27,11 @@ jobs:
           python -m pip install --upgrade pip
           pip install pandas openpyxl requests
 
-      - name: Update legal aid providers data
+      - name: Update legal aid providers data (CSV)
         run: python scripts/update-legal-aid-providers.py
+
+      - name: Update legal aid listings for Next.js app
+        run: python web/scripts/update-legal-aid-listings-adl.py
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -40,13 +43,13 @@ jobs:
 
       - name: Commit updated data
         run: |
-          if git diff --quiet -- data/legal_aid_providers_latest.csv data/legal_aid_providers_meta.json data/services.csv; then
+          if git diff --quiet -- data/legal_aid_providers_latest.csv data/legal_aid_providers_meta.json data/services.csv web/data/legal-aid-listings.json web/data/legal-aid-listings-meta.json; then
             echo "No data changes to commit."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/legal_aid_providers_latest.csv data/legal_aid_providers_meta.json data/services.csv
-          git commit -m "chore: monthly legal aid providers data refresh"
+          git add data/legal_aid_providers_latest.csv data/legal_aid_providers_meta.json data/services.csv web/data/legal-aid-listings.json web/data/legal-aid-listings-meta.json
+          git commit -m "chore: monthly legal aid data refresh (CSV + Next.js listings)"
           git push
 

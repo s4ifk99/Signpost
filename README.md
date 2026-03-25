@@ -1,10 +1,24 @@
 # Signpost (Legal Services Directory)
 
-Craigslist-style directory of legal help services, designed for an affiliate-style business model.
+Monorepo: a **static** Craigslist-style directory at the repo root, plus a **Next.js** app under `web/` (categories, legal-aid listings, AI search).
 
 ## Run locally
 
-Open `index.html` in your browser.
+### Static directory
+
+Open `index.html` in your browser (scripts live in `static-site/`).
+
+### Next.js app (`web/`)
+
+```bash
+cd web
+npm install
+npm run dev
+```
+
+Then open the URL shown in the terminal (usually `http://localhost:3000`).
+
+**Deploying the Next.js app** (e.g. Vercel): set the project **root directory** to `web/` and use the default Next.js build settings.
 
 ## CSV export
 
@@ -37,6 +51,8 @@ This project now includes a monthly ingest pipeline for the Legal Aid Agency pro
 
 Runs automatically on the 2nd day of every month at 06:00 UTC, and can be run manually from the GitHub Actions tab (`workflow_dispatch`).
 
+The same workflow also regenerates **`web/data/legal-aid-listings.json`** (and meta) for the Next.js app via `web/scripts/update-legal-aid-listings-adl.py`.
+
 ## Edit listings
 
 Update `data/services.json`.
@@ -53,7 +69,7 @@ Each listing supports:
 
 ## Affiliate tracking
 
-Affiliate buttons automatically append URL parameters (UTM) in `app/config.js`.
+Affiliate buttons automatically append URL parameters (UTM) in `static-site/config.js`.
 Edit:
 - `UTM_SOURCE`
 - `UTM_MEDIUM`

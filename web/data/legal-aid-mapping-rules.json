@@ -1,0 +1,64 @@
+{
+  "default": {
+    "subcategorySlug": "human-rights",
+    "parentCategory": "Public & Human Rights"
+  },
+  "rules": [
+    {
+      "containsAny": ["debt", "insolvency", "ivas", "ccjs", "debt recovery"],
+      "subcategorySlug": "debt-management",
+      "parentCategory": "Debt & Insolvency"
+    },
+    {
+      "containsAny": ["housing", "homeless", "hlpas", "rent", "eviction"],
+      "subcategorySlug": "housing-homelessness",
+      "parentCategory": "Public & Human Rights"
+    },
+    {
+      "containsAny": ["education"],
+      "subcategorySlug": "education-law",
+      "parentCategory": "Public & Human Rights"
+    },
+    {
+      "containsAny": ["mental health", "mental-health"],
+      "subcategorySlug": "mental-health-law",
+      "parentCategory": "Public & Human Rights"
+    },
+    {
+      "containsAny": ["benefits", "welfare"],
+      "subcategorySlug": "benefits-appeals",
+      "parentCategory": "Public & Human Rights"
+    },
+    {
+      "containsAny": ["crime", "criminal", "prison law"],
+      "subcategorySlug": "criminal-defence",
+      "parentCategory": "Criminal Defence"
+    },
+    {
+      "containsAny": ["immigration", "asylum"],
+      "subcategorySlug": "human-rights",
+      "parentCategory": "Public & Human Rights"
+    },
+    {
+      "containsAny": ["family", "divorce"],
+      "subcategorySlug": "human-rights",
+      "parentCategory": "Public & Human Rights"
+    },
+    {
+      "containsAny": ["discrimination"],
+      "subcategorySlug": "human-rights",
+      "parentCategory": "Public & Human Rights"
+    },
+    {
+      "containsAny": ["modern slavery"],
+      "subcategorySlug": "human-rights",
+      "parentCategory": "Public & Human Rights"
+    },
+    {
+      "containsAny": ["mediation"],
+      "subcategorySlug": "human-rights",
+      "parentCategory": "Public & Human Rights"
+    }
+  ]
+}
+

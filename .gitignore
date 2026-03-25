@@ -1,0 +1,14 @@
+# Next.js app (web/)
+web/node_modules/
+web/.next/
+web/out/
+web/.vercel
+web/*.tsbuildinfo
+
+# Python
+__pycache__/
+*.py[cod]
+
+# OS / editor
+.DS_Store
+Thumbs.db
