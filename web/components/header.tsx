@@ -1,6 +1,6 @@
 "use client";
 
-import { MapPin, ChevronDown, Scale } from "lucide-react";
+import { MapPin, ChevronDown } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
@@ -59,7 +59,13 @@ export function Header() {
 
             <nav className="hidden items-center gap-4 text-sm md:flex">
               <Link
-                href="/signposting"
+                href="/search"
+                className="text-muted-foreground transition-colors hover:text-foreground"
+              >
+                Search
+              </Link>
+              <Link
+                href="/#signposting"
                 className="text-muted-foreground transition-colors hover:text-foreground"
               >
                 Signposting

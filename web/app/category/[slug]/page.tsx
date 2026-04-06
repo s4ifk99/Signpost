@@ -1,24 +1,33 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Phone, Mail, MapPin, Globe, ExternalLink } from "lucide-react";
+import { ArrowLeft, Phone, Mail, MapPin, Globe, ExternalLink, Search } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { getCategoryInfo, getListingsBySubcategory, type Listing } from "@/lib/data";
+import { lexicalSearchListingsInSubset } from "@/lib/search/lexical";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
+  searchParams?: Promise<{ q?: string }>;
 };
 
-export default async function CategoryPage({ params }: PageProps) {
+export default async function CategoryPage({ params, searchParams }: PageProps) {
   const { slug } = await params;
+  const sp = (await searchParams) ?? {};
+  const filterQ = (sp.q || "").trim();
   const categoryInfo = getCategoryInfo(slug);
 
   if (!categoryInfo) {
     notFound();
   }
 
-  const listings = getListingsBySubcategory(slug);
+  let listings = getListingsBySubcategory(slug);
+  if (filterQ.length >= 2) {
+    const hits = lexicalSearchListingsInSubset(filterQ, listings, 400);
+    if (hits.length) listings = hits.map((h) => h.listing);
+  }
   const freeListings = listings.filter((l) => l.isFree);
   const paidListings = listings.filter((l) => !l.isFree);
 
@@ -53,6 +62,24 @@ export default async function CategoryPage({ params }: PageProps) {
             Find trusted {categoryInfo.name.toLowerCase()} services across the United Kingdom. 
             {freeListings.length > 0 && ` ${freeListings.length} free services available.`}
           </p>
+          <form className="mt-6 flex max-w-lg flex-col gap-2 sm:flex-row sm:items-center" method="get" action="">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                name="q"
+                defaultValue={filterQ}
+                placeholder="Filter this category…"
+                className="h-10 border-primary/20 pl-9"
+                aria-label="Filter listings in this category"
+              />
+            </div>
+            <Button type="submit" variant="secondary" className="h-10 shrink-0">
+              Filter
+            </Button>
+          </form>
+          {filterQ.length > 0 && filterQ.length < 2 && (
+            <p className="mt-2 text-xs text-muted-foreground">Use at least 2 characters to filter.</p>
+          )}
         </div>
 
         {/* Free Services Section */}

@@ -99,6 +99,8 @@ export type Listing = {
   isFree: boolean;
   isSponsored: boolean;
   isLegalAid?: boolean;
+  /** GOV.UK directory area-of-law label (legal-aid ingest only); improves search text. */
+  legalAidGovCategory?: string;
 };
 
 // Sample listings data - in production this would come from a database
@@ -538,4 +540,20 @@ export function getAllSubcategories(): { name: string; slug: string; parentCateg
     }
   }
   return result;
+}
+
+/** Cities with at least one listing (for search facets), most common first. */
+export function getDistinctCities(options?: { minLength?: number; max?: number }): string[] {
+  const minLength = options?.minLength ?? 2;
+  const max = options?.max ?? 36;
+  const counts = new Map<string, number>();
+  for (const l of mergedListings) {
+    const c = l.city?.trim();
+    if (!c || c.length < minLength) continue;
+    counts.set(c, (counts.get(c) ?? 0) + 1);
+  }
+  return [...counts.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .map(([city]) => city)
+    .slice(0, max);
 }

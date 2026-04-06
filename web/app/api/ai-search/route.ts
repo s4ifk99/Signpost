@@ -5,56 +5,70 @@ import {
   UIMessage,
 } from "ai";
 import { fetchAllListings, categories, type Listing } from "@/lib/data";
+import { hybridSearchListings } from "@/lib/search/hybrid";
 
 export const maxDuration = 30;
 
-// Build a summary of available services for the AI context
-function buildServicesContext(): string {
+function latestUserText(messages: UIMessage[]): string {
+  for (let i = messages.length - 1; i >= 0; i--) {
+    const m = messages[i];
+    if (m?.role !== "user") continue;
+    const parts = m.parts ?? [];
+    const text = parts
+      .filter((p): p is { type: "text"; text: string } => p.type === "text")
+      .map((p) => p.text)
+      .join(" ")
+      .trim();
+    if (text) return text;
+  }
+  return "";
+}
+
+function listingPriority(l: Listing): number {
+  return (l.isFree ? 100 : 0) + (l.isSponsored ? 50 : 0) + (l.isLegalAid ? 40 : 0);
+}
+
+async function buildServicesContext(userQuery: string): Promise<string> {
   const allListings = fetchAllListings();
-  
-  // Group listings by category
-  const grouped: Record<string, Listing[]> = {};
-  for (const listing of allListings) {
-    if (!grouped[listing.category]) {
-      grouped[listing.category] = [];
+  const q = userQuery.trim();
+  let selected: Listing[] = [];
+
+  if (q.length >= 2) {
+    const hits = await hybridSearchListings(q, {
+      limit: 55,
+      semantic: Boolean(process.env.HF_TOKEN),
+    });
+    selected = hits.map((h) => h.listing);
+  }
+
+  const seen = new Set(selected.map((l) => l.id));
+  const rest = [...allListings].sort((a, b) => listingPriority(b) - listingPriority(a));
+  for (const l of rest) {
+    if (selected.length >= 120) break;
+    if (!seen.has(l.id)) {
+      selected.push(l);
+      seen.add(l.id);
     }
-    grouped[listing.category].push(listing);
   }
 
   const MAX_LISTINGS_TOTAL = 120;
-  const MAX_LISTINGS_PER_CATEGORY = 12;
-  let totalAdded = 0;
+  let context =
+    "Available Legal Services in the Access Directory for Legal Help (ADL) - UK:\n\n";
 
-  // Build context string
-  let context = "Available Legal Services in the Access Directory for Legal Help (ADL) - UK:\n\n";
-  
-  for (const [category, listings] of Object.entries(grouped)) {
-    context += `## ${category}\n`;
-    // Prefer showing free services, then sponsored, then legal aid, to keep the AI context useful.
-    const sorted = [...listings].sort((a, b) => {
-      const score = (l: Listing) =>
-        (l.isFree ? 100 : 0) + (l.isSponsored ? 50 : 0) + (l.isLegalAid ? 25 : 0);
-      return score(b) - score(a);
-    });
-
-    const selected = sorted.slice(0, MAX_LISTINGS_PER_CATEGORY);
-    for (const listing of selected) {
-      if (totalAdded >= MAX_LISTINGS_TOTAL) break;
-      context += `- ${listing.businessName} (${listing.city})`;
-      if (listing.isFree) context += " [FREE SERVICE]";
-      context += `\n  ${listing.description}\n`;
-      context += `  Phone: ${listing.phone} | Email: ${listing.email}\n`;
-      if (listing.website) context += `  Website: ${listing.website}\n`;
-      context += `  Category: ${listing.subcategory}\n\n`;
-      totalAdded += 1;
-    }
-    if (totalAdded >= MAX_LISTINGS_TOTAL) break;
+  for (let i = 0; i < selected.length && i < MAX_LISTINGS_TOTAL; i++) {
+    const listing = selected[i]!;
+    context += `- ${listing.businessName} (${listing.city})`;
+    if (listing.isFree) context += " [FREE SERVICE]";
+    if (listing.isLegalAid) context += " [LEGAL AID PROVIDER]";
+    context += `\n  ${listing.description}\n`;
+    context += `  Phone: ${listing.phone} | Email: ${listing.email}\n`;
+    if (listing.website) context += `  Website: ${listing.website}\n`;
+    context += `  Category: ${listing.subcategory}\n\n`;
   }
 
-  // Add category information
   context += "\n## Available Categories:\n";
   for (const [parentCat, subcats] of Object.entries(categories)) {
-    context += `${parentCat}: ${subcats.map(s => s.name).join(", ")}\n`;
+    context += `${parentCat}: ${subcats.map((s) => s.name).join(", ")}\n`;
   }
 
   return context;
@@ -63,8 +77,8 @@ function buildServicesContext(): string {
 export async function POST(req: Request) {
   const { messages }: { messages: UIMessage[] } = await req.json();
 
-  // Get the services context
-  const servicesContext = buildServicesContext();
+  const userQuery = latestUserText(messages ?? []);
+  const servicesContext = await buildServicesContext(userQuery);
 
   const systemPrompt = `You are a helpful legal services assistant for the Access Directory for Legal Help (ADL), a UK-based legal resources directory. Your role is to help users find appropriate legal services based on their needs.
 

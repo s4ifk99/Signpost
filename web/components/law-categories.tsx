@@ -12,7 +12,7 @@ export function LawCategories() {
   }
 
   return (
-    <section className="py-12">
+    <section id="categories" className="py-12">
       <div className="mx-auto max-w-6xl px-4">
         <div className="mb-8 text-center">
           <h2 className="font-serif text-2xl font-semibold tracking-tight text-primary">

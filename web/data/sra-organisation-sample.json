@@ -1,0 +1,15 @@
+[
+  {
+    "OrganisationId": 1000001,
+    "AuthorisedName": "Example Solicitors LLP",
+    "TradingName": "Example Law",
+    "Offices": [
+      {
+        "AddressLine1": "1 Legal Street",
+        "PostTown": "London",
+        "County": "Greater London",
+        "PostCode": "EC1A 1BB"
+      }
+    ]
+  }
+]

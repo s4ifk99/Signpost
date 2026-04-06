@@ -1,0 +1,25 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+/// Normalised SRA Data Share organisation — system of record alongside Meilisearch index.
+model SraOrganisation {
+  id            String   @id @db.VarChar(128)
+  sraId         String   @unique @map("sra_id") @db.VarChar(64)
+  businessName  String   @map("business_name") @db.VarChar(512)
+  searchText    String   @map("search_text") @db.LongText
+  city          String   @default("") @db.VarChar(255)
+  postcode      String   @default("") @db.VarChar(32)
+  county        String   @default("") @db.VarChar(255)
+  country       String   @default("") @db.VarChar(128)
+  sraProfileUrl String   @map("sra_profile_url") @db.VarChar(2048)
+  source        String   @default("sra") @db.VarChar(16)
+  updatedAt     DateTime @updatedAt @map("updated_at") @db.DateTime(3)
+
+  @@map("sra_organisations")
+}

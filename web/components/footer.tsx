@@ -39,8 +39,11 @@ export function Footer() {
         
         <div className="mt-8 border-t border-primary-foreground/20 pt-6 space-y-3">
           <p className="text-center text-xs text-primary-foreground/70">
-            The Access Directory for Legal Help (ADL) is dedicated to providing free legal resources and services across the United Kingdom. 
-            Our primary focus is connecting users with free legal advice, pro bono services, legal aid, and charitable organisations.
+            The Access Directory for Legal Help (ADL) is a broad UK legal services directory: practice-area browsing,
+            search across curated listings and (where included) national registers, with strong support for{" "}
+            <strong className="text-primary-foreground/85">free</strong> services,{" "}
+            <strong className="text-primary-foreground/85">legal aid</strong> (filterable in search), pro bono, and
+            charitable organisations — alongside other listed providers where relevant.
           </p>
           <p className="text-center text-xs text-primary-foreground/70">
             <strong className="text-primary-foreground/90">Affiliate Disclosure:</strong> Some listings marked as "Sponsored" contain affiliate links. 

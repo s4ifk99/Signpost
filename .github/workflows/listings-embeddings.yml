@@ -1,0 +1,52 @@
+name: Build listing embeddings
+
+# Precomputes web/data/listings-embeddings.bin + meta for semantic search.
+# Heavy (downloads model + CPU encode). Run manually when listings change.
+
+on:
+  workflow_dispatch:
+
+jobs:
+  embed:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install web dependencies
+        working-directory: web
+        run: npm ci
+
+      - name: Dump merged listings JSON
+        working-directory: web
+        run: npm run embed:dump
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install embedding dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install sentence-transformers
+
+      - name: Encode embeddings
+        run: python web/scripts/embed-listings.py
+
+      - name: Commit embeddings (if changed)
+        run: |
+          if git diff --quiet -- web/data/listings-embeddings.bin web/data/listings-embeddings-meta.json; then
+            echo "No embedding changes."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add web/data/listings-embeddings.bin web/data/listings-embeddings-meta.json
+          git commit -m "chore: refresh listing embeddings for semantic search"
+          git push

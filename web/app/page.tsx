@@ -1,19 +1,40 @@
 import { Header } from "@/components/header";
-import { SearchBar } from "@/components/search-bar";
-import { LawCategories } from "@/components/law-categories";
 import { Footer } from "@/components/footer";
-import { AISearch } from "@/components/ai-search";
+import { ProblemAssistant } from "@/components/problem-assistant";
+import signpostingResources from "@/data/signposting-resources.json";
+import SignpostingView, { type Section } from "./signposting/signposting-view";
 
 export default function Home() {
+  const sections = signpostingResources.sections as Section[];
+
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <Header />
-      <SearchBar />
+      <section className="border-b border-border bg-background py-10 md:py-12">
+        <div className="mx-auto max-w-3xl px-4 text-center">
+          <h1 className="font-serif text-3xl font-semibold tracking-tight text-primary md:text-4xl">
+            Access Directory for Legal Help
+          </h1>
+          <p className="mt-4 text-muted-foreground md:text-lg">
+            Browse signposting resources on this page. When you&apos;re ready, scroll to the bottom, describe your
+            problem, and we&apos;ll direct you to the best people to contact with a focused search.
+          </p>
+          <p className="mt-3 text-sm text-muted-foreground">
+            <a href="#find-help" className="text-primary underline-offset-4 hover:underline">
+              Jump to describe your problem
+            </a>
+            {" · "}
+            <a href="#signposting" className="text-primary underline-offset-4 hover:underline">
+              Helplines and guides
+            </a>
+          </p>
+        </div>
+      </section>
       <main className="flex-1">
-        <LawCategories />
+        <SignpostingView variant="embedded" sections={sections} />
       </main>
+      <ProblemAssistant />
       <Footer />
-      <AISearch />
     </div>
   );
 }

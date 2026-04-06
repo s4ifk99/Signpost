@@ -18,9 +18,13 @@ yarn-error.log*
 
 # env files
 .env*
+!.env.example
 
 # vercel
 .vercel
 
 # typescript
 *.tsbuildinfo
+
+# Generated for local embedding pipeline (large)
+/data/all-listings-embed-input.json

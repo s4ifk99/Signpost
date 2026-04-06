@@ -1,0 +1,42 @@
+[
+  {
+    "query": "drink driving solicitor",
+    "expectSubcategorySlug": "drink-driving",
+    "minRank": 20
+  },
+  {
+    "query": "legal aid crime representation",
+    "expectSubcategorySlug": "criminal-defence",
+    "minRank": 35
+  },
+  {
+    "query": "free debt helpline",
+    "expectSubcategorySlug": ["debt-management", "stepchange-debt"],
+    "minRank": 25
+  },
+  {
+    "query": "eviction housing advice",
+    "expectSubcategorySlug": ["housing-homelessness", "shelter-housing"],
+    "minRank": 30
+  },
+  {
+    "query": "clinical negligence claim",
+    "expectSubcategorySlug": "clinical-negligence",
+    "minRank": 25
+  },
+  {
+    "query": "Citizens Advice London",
+    "expectSubcategorySlug": "citizens-advice",
+    "minRank": 15
+  },
+  {
+    "query": "Burton Copeland solicitors",
+    "expectSubcategorySlug": "criminal-defence",
+    "minRank": 15
+  },
+  {
+    "query": "financial ombudsman complaint",
+    "expectSubcategorySlug": "financial-ombudsman",
+    "minRank": 20
+  }
+]
