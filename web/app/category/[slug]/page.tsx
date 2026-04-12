@@ -7,6 +7,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { getCategoryInfo, getListingsBySubcategory, type Listing } from "@/lib/data";
 import { lexicalSearchListingsInSubset } from "@/lib/search/lexical";
+import {
+  searchListingsTypesense,
+  typesenseListingsConfigured,
+} from "@/lib/search/typesense-listings";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -25,8 +29,15 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
 
   let listings = getListingsBySubcategory(slug);
   if (filterQ.length >= 2) {
-    const hits = lexicalSearchListingsInSubset(filterQ, listings, 400);
-    if (hits.length) listings = hits.map((h) => h.listing);
+    if (typesenseListingsConfigured()) {
+      const hits = await searchListingsTypesense(filterQ, 400, undefined, {
+        subcategorySlug: slug,
+      });
+      if (hits.length) listings = hits.map((h) => h.listing);
+    } else {
+      const hits = lexicalSearchListingsInSubset(filterQ, listings, 400);
+      if (hits.length) listings = hits.map((h) => h.listing);
+    }
   }
   const freeListings = listings.filter((l) => l.isFree);
   const paidListings = listings.filter((l) => !l.isFree);

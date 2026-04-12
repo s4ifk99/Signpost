@@ -16,12 +16,12 @@ export default function Home() {
             Access Directory for Legal Help
           </h1>
           <p className="mt-4 text-muted-foreground md:text-lg">
-            Browse signposting resources on this page. When you&apos;re ready, scroll to the bottom, describe your
-            problem, and we&apos;ll direct you to the best people to contact with a focused search.
+            Browse signposting resources on this page. When you&apos;re ready, scroll to the bottom to search the
+            directory by topic, location, and filters.
           </p>
           <p className="mt-3 text-sm text-muted-foreground">
             <a href="#find-help" className="text-primary underline-offset-4 hover:underline">
-              Jump to describe your problem
+              Jump to directory search
             </a>
             {" · "}
             <a href="#signposting" className="text-primary underline-offset-4 hover:underline">

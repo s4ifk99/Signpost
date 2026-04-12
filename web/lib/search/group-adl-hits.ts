@@ -1,6 +1,5 @@
 import type { Listing } from "@/lib/data";
 import type { HybridHit } from "@/lib/search/hybrid-core";
-import type { SraMeiliDocument } from "@/lib/search/sra-document";
 
 /** Normalise firm name for grouping (legal aid multi-office rows). */
 function normaliseFirmName(name: string): string {
@@ -34,9 +33,7 @@ export type AdlGroupToken = {
 
 type AdlSingleToken = { type: "adl"; order: number; hit: HybridHit };
 
-type SraToken = { type: "sra"; order: number; docId: string };
-
-type EmitToken = AdlGroupToken | AdlSingleToken | SraToken;
+type EmitToken = AdlGroupToken | AdlSingleToken;
 
 function upsertGroupHit(map: Map<string, HybridHit>, hit: HybridHit) {
   const id = hit.listing.id;
@@ -52,7 +49,6 @@ export function buildFusedSearchTokens(
   fused: string[],
   adlPrefix: string,
   adlMap: Map<string, HybridHit>,
-  sraMap: Map<string, SraMeiliDocument>,
 ): EmitToken[] {
   const tokens: EmitToken[] = [];
   const groupIndexByGid = new Map<string, number>();
@@ -83,10 +79,6 @@ export function buildFusedSearchTokens(
       }
       order += 1;
       continue;
-    }
-    if (sraMap.has(key)) {
-      tokens.push({ type: "sra", order, docId: key });
-      order += 1;
     }
   }
 

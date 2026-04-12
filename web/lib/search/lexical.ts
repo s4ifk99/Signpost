@@ -1,6 +1,9 @@
 import Fuse from "fuse.js";
 import { fetchAllListings, type Listing } from "@/lib/data";
-import { getListingSearchDocument } from "@/lib/search/listing-document";
+import {
+  getListingSearchDocument,
+  listingBoostScore,
+} from "@/lib/search/listing-document";
 
 let fuseCache: Fuse<Listing> | null = null;
 
@@ -55,13 +58,7 @@ function getFuseFullIndex(): Fuse<{ id: string; listing: Listing; text: string }
   return fuseFullCache;
 }
 
-export function listingBoostScore(listing: Listing): number {
-  let b = 0;
-  if (listing.isFree) b += 0.09;
-  if (listing.isLegalAid) b += 0.07;
-  if (listing.isSponsored) b += 0.04;
-  return b;
-}
+export { listingBoostScore } from "@/lib/search/listing-document";
 
 function fuseScoreToRelevance(score: number | undefined): number {
   const s = score ?? 1;

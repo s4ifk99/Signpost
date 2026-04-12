@@ -4,6 +4,10 @@ import { loadEmbeddingsBundle, semanticTopIds } from "@/lib/embeddings-store";
 import { embedQueryWithHf } from "@/lib/embed-query";
 import { lexicalSearchListings } from "@/lib/search/lexical";
 import {
+  searchListingsTypesense,
+  typesenseListingsConfigured,
+} from "@/lib/search/typesense-listings";
+import {
   finalizeHybridHits,
   type HybridHit,
   type HybridSearchOptions,
@@ -25,7 +29,9 @@ export async function hybridSearchListings(
   } = options;
   if (!q || limit <= 0) return [];
 
-  const lexicalHits = lexicalSearchListings(q, 120);
+  const lexicalHits = typesenseListingsConfigured()
+    ? await searchListingsTypesense(q, 120, facets)
+    : lexicalSearchListings(q, 120);
   const lexicalIds = lexicalHits.map((h) => h.listing.id);
 
   let semanticIds: string[] = [];

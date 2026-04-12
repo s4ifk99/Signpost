@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 import { lexicalSearchListings } from "@/lib/search/lexical";
 import { searchSubcategories } from "@/lib/search/categories";
+import {
+  searchListingsTypesense,
+  typesenseListingsConfigured,
+} from "@/lib/search/typesense-listings";
 
 export const runtime = "nodejs";
 
@@ -11,7 +15,9 @@ export async function GET(req: Request) {
     return NextResponse.json({ listings: [], categories: [] });
   }
 
-  const listingHits = lexicalSearchListings(q, 10);
+  const listingHits = typesenseListingsConfigured()
+    ? await searchListingsTypesense(q, 10)
+    : lexicalSearchListings(q, 10);
   const categories = searchSubcategories(q, 6);
 
   const listings = listingHits.map(({ listing, lexicalScore }) => ({

@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import type { SearchFacets } from "@/lib/search/rerank";
-import { meilisearchConfigured } from "@/lib/search/meilisearch-sra";
+import {
+  typesenseListingsConfigured,
+  typesenseListingsReachable,
+} from "@/lib/search/typesense-listings";
 import { unifiedSearchListings } from "@/lib/search/unified-search";
 
 export const runtime = "nodejs";
@@ -22,11 +25,15 @@ export async function GET(req: Request) {
         }
       : undefined;
 
+  const tsConfigured = typesenseListingsConfigured();
+  const tsOk = tsConfigured ? await typesenseListingsReachable() : false;
+
   if (!q) {
     return NextResponse.json({
       results: [],
       semanticUsed: false,
-      meilisearchConfigured: await meilisearchConfigured(),
+      typesenseListingsConfigured: tsConfigured,
+      typesenseListingsReachable: tsOk,
     });
   }
 
@@ -56,11 +63,10 @@ export async function GET(req: Request) {
       return false;
     });
 
-  const meili = await meilisearchConfigured();
-
   return NextResponse.json({
     semanticUsed,
-    meilisearchConfigured: meili,
+    typesenseListingsConfigured: tsConfigured,
+    typesenseListingsReachable: tsOk,
     results: hits.map((row) => {
       if (row.kind === "adl") {
         const { listing, sources } = row.hit;
@@ -82,52 +88,37 @@ export async function GET(req: Request) {
           sources,
         };
       }
-      if (row.kind === "adlGroup") {
-        const { representative, hits: groupHits, firmGroupId } = row;
-        const L = representative.listing;
-        const sources = [
-          ...new Set(groupHits.flatMap((h) => h.sources)),
-        ] as ("lexical" | "semantic")[];
-        return {
-          kind: "adlGroup" as const,
-          firmGroupId,
-          id: firmGroupId,
-          businessName: L.businessName,
-          description: L.description,
-          category: L.category,
-          subcategory: L.subcategory,
-          isFree: L.isFree,
-          isLegalAid: true as const,
-          isSponsored: L.isSponsored,
-          sources,
-          locations: groupHits.map((h) => {
-            const l = h.listing;
-            return {
-              id: l.id,
-              city: l.city,
-              postcode: l.postcode,
-              phone: l.phone,
-              email: l.email,
-              address: l.address,
-              website: l.website,
-              subcategory: l.subcategory,
-              description: l.description,
-            };
-          }),
-        };
-      }
-      const d = row.doc;
+      const { representative, hits: groupHits, firmGroupId } = row;
+      const L = representative.listing;
+      const sources = [
+        ...new Set(groupHits.flatMap((h) => h.sources)),
+      ] as ("lexical" | "semantic")[];
       return {
-        kind: "sra" as const,
-        id: d.id,
-        businessName: d.businessName,
-        description: d.searchText.slice(0, 500),
-        city: d.city,
-        postcode: d.postcode,
-        county: d.county,
-        sraId: d.sraId,
-        sraProfileUrl: d.sraProfileUrl,
-        sources: ["sra"] as const,
+        kind: "adlGroup" as const,
+        firmGroupId,
+        id: firmGroupId,
+        businessName: L.businessName,
+        description: L.description,
+        category: L.category,
+        subcategory: L.subcategory,
+        isFree: L.isFree,
+        isLegalAid: true as const,
+        isSponsored: L.isSponsored,
+        sources,
+        locations: groupHits.map((h) => {
+          const l = h.listing;
+          return {
+            id: l.id,
+            city: l.city,
+            postcode: l.postcode,
+            phone: l.phone,
+            email: l.email,
+            address: l.address,
+            website: l.website,
+            subcategory: l.subcategory,
+            description: l.description,
+          };
+        }),
       };
     }),
   });

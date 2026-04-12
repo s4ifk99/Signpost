@@ -8,7 +8,7 @@
  * Env:
  *   SRA_APIM_SUBSCRIPTION_KEY (required)
  *   MEILISEARCH_HOST, MEILISEARCH_API_KEY (required)
- *   DATABASE_URL (optional) — mysql://… When set, each batch is written to DB before Meili.
+ *   DATABASE_URL (optional) — mysql://… When set, each batch is written to DB before Meilisearch.
  *   SRA_ORGANISATIONS_URL (optional, default: official GetAll URL)
  *
  * Run from repo: cd web && npm run sra:sync
@@ -20,7 +20,10 @@ import { MeiliSearch } from "meilisearch";
 import { upsertSraDocumentsMysql } from "../lib/sra-mysql-sync";
 import { ensureSraIndex } from "../lib/search/meilisearch-index";
 import { SRA_MEILISEARCH_INDEX } from "../lib/search/meilisearch-config";
-import { normaliseSraOrganisation } from "../lib/search/sra-document";
+import {
+  normaliseSraOrganisation,
+  type SraMeiliDocument,
+} from "../lib/search/sra-document";
 
 const DEFAULT_SRA_URL =
   "https://sra-prod-apim.azure-api.net/datashare/api/V1/organisation/GetAll";
@@ -116,7 +119,7 @@ async function main() {
   const rawRows = await fetchAllOrganisations(sraKey, startUrl);
   console.log("Raw organisation rows:", rawRows.length);
 
-  const docs = [];
+  const docs: SraMeiliDocument[] = [];
   for (const row of rawRows) {
     if (!row || typeof row !== "object") continue;
     const doc = normaliseSraOrganisation(row as Record<string, unknown>);
@@ -139,7 +142,7 @@ async function main() {
       console.log(
         `Meilisearch addDocuments task ${task.taskUid} (${chunk.length} docs, offset ${i})`,
       );
-      await client.tasks.waitForTask(task.taskUid, { timeOutMs: 600_000 });
+      await client.tasks.waitForTask(task.taskUid, { timeout: 600_000 });
     }
   } finally {
     await prisma?.$disconnect();

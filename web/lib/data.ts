@@ -526,7 +526,8 @@ export function getCategoryInfo(slug: string): { name: string; parentCategory: s
   for (const [parentCategory, subcategories] of Object.entries(categories)) {
     const found = subcategories.find((sub) => sub.slug === slug);
     if (found) {
-      return { name: found.name, parentCategory, isFree: found.free };
+      const f = found as { name: string; slug: string; free?: boolean };
+      return { name: f.name, parentCategory, isFree: f.free };
     }
   }
   return null;
