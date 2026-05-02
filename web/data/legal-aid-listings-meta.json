@@ -1,8 +1,8 @@
 {
   "source_page": "https://www.gov.uk/government/publications/directory-of-legal-aid-providers",
-  "source_xlsx_url": "https://assets.publishing.service.gov.uk/media/69b178d0cdd628b29e349667/260226_Directory_of_provider_GOV.UK_v3.xlsx",
-  "pulled_at_utc": "2026-04-02T07:04:46+00:00",
-  "total_listings": 4830,
+  "source_xlsx_url": "https://assets.publishing.service.gov.uk/media/69d8ba969df301a39cd8d88f/070426_Directory_of_provider_GOV.UK_v3.xlsx",
+  "pulled_at_utc": "2026-05-02T07:23:19+00:00",
+  "total_listings": 4829,
   "total_sheets": 9,
   "sheet_stats": [
     {
@@ -11,7 +11,7 @@
     },
     {
       "sheet": "Summary",
-      "rows": 3338
+      "rows": 3346
     },
     {
       "sheet": "2024 Civil authorisations",
@@ -19,11 +19,11 @@
     },
     {
       "sheet": "Modern Slavery",
-      "rows": 509
+      "rows": 510
     },
     {
       "sheet": "Housing Loss Prevention Advice",
-      "rows": 108
+      "rows": 110
     },
     {
       "sheet": "2024 Civil PT & O Presence",
@@ -39,7 +39,7 @@
     },
     {
       "sheet": "2025 Crime provider DSCC scheme",
-      "rows": 3687
+      "rows": 3682
     }
   ],
   "mapping_checks": [
@@ -52,25 +52,25 @@
     {
       "govNeedle": "Housing",
       "expectedSubcategorySlug": "housing-homelessness",
-      "matchingListings": 540,
+      "matchingListings": 537,
       "passed": true
     },
     {
       "govNeedle": "Debt",
       "expectedSubcategorySlug": "debt-management",
-      "matchingListings": 410,
+      "matchingListings": 406,
       "passed": true
     },
     {
       "govNeedle": "Education",
       "expectedSubcategorySlug": "education-law",
-      "matchingListings": 24,
+      "matchingListings": 23,
       "passed": true
     },
     {
       "govNeedle": "Mental Health",
       "expectedSubcategorySlug": "mental-health-law",
-      "matchingListings": 162,
+      "matchingListings": 167,
       "passed": true
     }
   ]
